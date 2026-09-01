@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bona Comida</title>
     <?php
-    include "../app/Controllers/conexao.php"; // Puxa a conexão pronta
+    include "../config/conexao.php"; // Puxa a conexão pronta
 
-    require '../app/Controllers/UsuarioModel.php';
+    require '../app/Models/UsuarioModel.php';
 
     $usuarioModel = new UsuarioModel($pdo);
 
