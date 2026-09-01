@@ -9,8 +9,11 @@
     include "../config/conexao.php"; // Puxa a conexão pronta
 
     require '../app/Models/UsuarioModel.php';
+    require '../app/Models/ProdutoModel.php';
 
     $usuarioModel = new UsuarioModel($pdo);
+
+    $produtos = new ProdutoModel($pdo);
 
     // // // insert no banco
     //     $usuario = $usuarioModel->inserir("Fabio", "fabio@email.com", "senha123");
@@ -19,6 +22,7 @@
 
     // // select no banco 
     $usuarios = $usuarioModel->ler();
+    $produtos = $produtos->ler();
 
 
     // Agora você já pode usar a variável $pdo aqui embaixo...
@@ -43,19 +47,32 @@
     }
     echo '</ol>';
 
-    $podutos = $pdo->query("select p.id,p.nome,p.preco,p.categoria from produtos p ")->fetchAll(PDO::FETCH_ASSOC);
+    if (count($produtos) > 0) {
 
-    if (count($podutos) > 0) {
-        echo "<table><tr><th>ID</th><th>Name</th><th>Preco</th><th>Categoria</th></tr>";
-        foreach ($podutos as $row) {
+    echo "<table border='1'>";
+    echo "<tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Categoria</th>
+          </tr>";
 
-            echo "<tr><td>" . $row["id"] . "</td><td>" . $row['nome'] . "</td><td>" . $row['preco'] . "</td><td>" . $row['categoria'] . "</td></tr>";
-        }
-        echo "</table>";
-    } else {
+    foreach ($produtos as $row) {
 
-        echo "0 results";
+        echo "<tr>";
+        echo "<td>" . $row['id'] . "</td>";
+        echo "<td>" . $row['nome'] . "</td>";
+        echo "<td>" . $row['preco'] . "</td>";
+        echo "<td>" . $row['categoria'] . "</td>";
+        echo "</tr>";
     }
+
+    echo "</table>";
+
+} else {
+    echo "0 resultados";
+}
+
 
     //     // Exibe a lista completa de usuários formatada na tela
     echo "<pre>";

@@ -17,7 +17,7 @@ class ProdutoModel {
 
     // SELECT dentro da classe ProdutoModel
     public function ler() {
-        $sql = "SELECT id, nome, preco, categoria FROM produtos";
+        $sql = "SELECT p.id,p.nome,p.preco,p.categoria FROM produtos p ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         
