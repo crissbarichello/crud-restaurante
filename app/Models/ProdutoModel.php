@@ -7,41 +7,42 @@ class ProdutoModel {
         $this->db = $conexao;
     }
 
-    // INSERT dentro da classe ProdutoModel
-    public function inserir($nome, $preco, $categoria) {
-        $sql = "INSERT INTO produtos (nome, preco, categoria) VALUES (?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        
-        return $stmt->execute([$nome, $preco, $categoria]);
-    }
-
-    // SELECT dentro da classe ProdutoModel
-    public function ler() {
-        $sql = "SELECT p.id,p.nome,p.preco,p.categoria FROM produtos p ";
+    public function buscarTodos() {
+        $sql = "SELECT * FROM produtos";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        
-        // Retorna uma matriz com todos os produtos encontrados
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // UPDATE dentro da classe ProdutoModel
-    public function atualizar($id, $nome, $preco, $categoria) {
-        // Atualiza apenas o produto que possui o ID correspondente
-        $sql = "UPDATE produtos SET nome = ?, preco = ?, categoria = ? WHERE id = ?";
+    // SELECT dentro da classe ProdutoModel
+    public function buscarPorId($id) {
+        $sql = "SELECT * FROM produtos WHERE id = :id";
         $stmt = $this->db->prepare($sql);
-        
-        // Retorna true se a atualização deu certo, ou false se falhou
-        return $stmt->execute([$nome, $preco, $categoria, $id]);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+     public function criar($dados) {
+        $sql = "INSERT INTO produtos (nome, preco, categoria) VALUES (:nome, :preco, :categoria)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['nome' => $dados['nome'], 'preco' => $dados['preco'], 'categoria' => $dados['categoria']]);
+        return $this->db->lastInsertId();
+    }
+    // UPDATE dentro da classe ProdutoModel
+    public function atualizar($id, $dados) {
+        // Atualiza apenas o produto que possui o ID correspondente
+        $sql = "UPDATE produtos SET nome = :nome, preco = :preco, categoria = :categoria WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['nome' => $dados['nome'], 'preco' => $dados['preco'], 'categoria' => $dados['categoria'], 'id' => $id]);
+        return $stmt->rowCount() > 0;
     }
 
     // DELETE dentro da classe ProdutoModel
-    public function deletar($id) {
+    public function excluir($id) {
         // Apaga apenas o produto com o ID correspondente
-        $sql = "DELETE FROM produtos WHERE id = ?";
+        $sql = "DELETE FROM produtos WHERE id = :id";
         $stmt = $this->db->prepare($sql);
-        
-        // Retorna true em caso de sucesso ou false em caso de falha
-        return $stmt->execute([$id]);
+        $stmt->execute(['id' => $id]);
+        return $stmt->rowCount() > 0;
     }
 }

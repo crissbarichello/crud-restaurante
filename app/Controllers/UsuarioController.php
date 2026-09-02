@@ -1,0 +1,36 @@
+<?php
+// LOCAL: app/Controllers/UsuarioController.php
+
+require "../app/Models/UsuarioModel.php";
+
+class UsuarioController {
+
+    // Mostra a página única: form (vazio ou preenchido) + lista
+    public function home($pdo, $id = null) {
+        $model = new UsuarioModel($pdo);
+        $usuarios = $model->buscarTodos();
+        $usuarioEditando = $id ? $model->buscarPorId($id) : null;
+        require "../views/usuarios.php";
+    }
+
+    public function cadastrar($pdo) {
+        $model = new UsuarioModel($pdo);
+        $model->criar($_POST);
+        header("Location: index.php");
+        exit;
+    }
+
+    public function atualizar($pdo, $id) {
+        $model = new UsuarioModel($pdo);
+        $model->atualizar($id, $_POST);
+        header("Location: index.php");
+        exit;
+    }
+
+    public function excluir($pdo, $id) {
+        $model = new UsuarioModel($pdo);
+        $model->excluir($id);
+        header("Location: index.php");
+        exit;
+    }
+}
